@@ -7,7 +7,8 @@ from tempfile import NamedTemporaryFile
 from zipfile import ZipFile
 import json
 
-from requests import Request
+#from requests import Request
+import requests
 
 
 class Bitbucket(object):
@@ -31,16 +32,29 @@ class Bitbucket(object):
             credentials and data to the given URL,
             and return the status code and the result on success.
         """
-        r = Request(
-            method=method,
-            url=url,
-            auth=auth,
-            data=kwargs)
-        send = r.send()
-        status = r.response.status_code
-        text = r.response.text
-        error = r.response.error
-        if send:
+        r = None
+        if method == "GET":
+            r = requests.get(url,auth=auth,data=kwargs) # or json dumps?
+        elif method == "DELETE":
+            r = requests.delete(url,auth=auth,data=kwargs) # or json dumps?
+        elif method == "PUT":
+            r = requests.put(url,auth=auth,data=kwargs) # or json dumps?
+        elif method == "POST":
+            r = requests.post(url,auth=auth,data=kwargs) # or json dumps?
+        #r = Request(
+        #method=method,
+        #url=url,
+        #auth=auth,
+        #data=kwargs)
+        #print dir(r), type(r)
+        #send = r.send()
+        if r is None:
+            return (False, error)
+        print r, dir(r)
+        status = r.status_code
+        text = r.text
+        error = r.reason
+        if not r is None:
             if status >= 200 and  status < 300:
                 if text:
                     try:

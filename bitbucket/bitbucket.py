@@ -65,12 +65,11 @@ class Bitbucket(object):
                         pass
                 return (True, text)
             elif status >= 300 and  status < 400:
-                return (False, 'Unauthorized access, '
-                    'please check your credentials.')
+                return (False, status)
             elif status >= 400 and  status < 500:
-                return (False, 'Service not found.')
+                return (False, status)
             elif status >= 500 and  status < 600:
-                return (False, 'Server error.')
+                return (False, status)
         else:
             return (False, error)
 
